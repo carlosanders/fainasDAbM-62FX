@@ -15,7 +15,7 @@ public class Main extends Application
 	try {
 
 	    Parent root = FXMLLoader.load(getClass().getResource("/view/FXMLVBoxMain.fxml"));
-	    Scene scene = new Scene(root, 800, 500);
+	    Scene scene = new Scene(root, 800, 600);
 	    
 	    Image icon = new Image(getClass().getResourceAsStream("/img/icon.png"));
 

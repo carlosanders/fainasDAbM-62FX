@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
@@ -30,6 +31,11 @@ public class FXMLVBoxMainController implements Initializable
     private Label lblVer;
     @FXML
     private Label lblAutor;
+    
+    @FXML
+    private Label lblTotal;
+
+    private String totalLinhas;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -41,21 +47,27 @@ public class FXMLVBoxMainController implements Initializable
     @FXML
     public void handleMenuItemLeituraArquivo(ActionEvent event) throws IOException
     {
-	AnchorPane a = (AnchorPane) FXMLLoader
-		.load(getClass()
-			.getResource("/view/FXMLAnchorPaneLeituraArquivo.fxml"));
+
+	//forma para passar valores entre controllers
+	FXMLLoader loader = new FXMLLoader();
+	loader.setLocation(getClass()
+		.getResource("/view/FXMLAnchorPaneLeituraArquivo.fxml"));
+	Parent aPane = loader.load();
 	
-	anchorPane.getChildren().setAll(a);
+	//exemplo
+	//FXMLAnchorPaneLeituraArquivoController c = loader.getController();
+	//c.setTotalLinhas("2500");
+	
+
+	anchorPane.getChildren().setAll(aPane);
     }
 
     // Event Listener on MenuItem[#menuItemTratamentoArquivo].onAction
     @FXML
     public void handleMenuItemTratamentoArquivo(ActionEvent event) throws IOException
     {
-	AnchorPane a = (AnchorPane) FXMLLoader
-		.load(getClass()
-			.getResource("/view/FXMLAnchorPane_xxxx.fxml"));
-	
+	AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/FXMLAnchorPane_xxxx.fxml"));
+
 	anchorPane.getChildren().setAll(a);
     }
 
@@ -63,10 +75,8 @@ public class FXMLVBoxMainController implements Initializable
     @FXML
     public void handleMenuItemGerarArquivo(ActionEvent event) throws IOException
     {
-	AnchorPane a = (AnchorPane) FXMLLoader
-		.load(getClass()
-			.getResource("/view/FXMLAnchorPane_xxxx.fxml"));
-	
+	AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/FXMLAnchorPane_xxxx.fxml"));
+
 	anchorPane.getChildren().setAll(a);
     }
 
@@ -101,5 +111,10 @@ public class FXMLVBoxMainController implements Initializable
     private void setVersao(String ver)
     {
 	lblVer.setText(ver);
+    }
+
+    public void setTotalLinhas(String total)
+    {
+	totalLinhas = total;
     }
 }

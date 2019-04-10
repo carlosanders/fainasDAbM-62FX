@@ -1,25 +1,37 @@
 package mb.dabm.controller;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.xml.bind.ParseConversionEvent;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -27,53 +39,72 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import mb.dabm.helper.Helper;
 import mb.dabm.helper.Timer;
 
 public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 {
 
-    @FXML // fx:id="root"
-    private AnchorPane root; // Value injected by FXMLLoader
+    @FXML
+    private AnchorPane root;
 
-    @FXML // fx:id="btnSelectFile"
-    private JFXButton btnSelectFile; // Value injected by FXMLLoader
+    @FXML
+    private JFXButton btnSelectFile;
 
-    @FXML // fx:id="btnVrfFile"
-    private JFXButton btnVrfFile; // Value injected by FXMLLoader
+    @FXML
+    private JFXButton btnVrfFile;
 
-    @FXML // fx:id="txtNameFile"
-    private JFXTextField txtNameFile; // Value injected by FXMLLoader
+    @FXML
+    private JFXTextField txtNameFile;
 
-    @FXML // fx:id="progress"
-    private JFXProgressBar progress; // Value injected by FXMLLoader
+    @FXML
+    private JFXProgressBar progress;
 
-    @FXML // fx:id="lblStatus"
-    private Label lblStatus; // Value injected by FXMLLoader
+    @FXML
+    private Label lblStatus;
 
-    @FXML // fx:id="btnTask"
-    private JFXButton btnTask; // Value injected by FXMLLoader
+    @FXML
+    private JFXButton btnTask;
 
-    @FXML // fx:id="anchorPaneResumo"
-    private AnchorPane anchorPaneResumo; // Value injected by FXMLLoader
+    @FXML
+    private AnchorPane anchorPaneResumo;
 
-    @FXML // fx:id="lblTotalLinhas"
-    private Label lblTotalLinhas; // Value injected by FXMLLoader
+    @FXML
+    private Label lblTotalLinhas;
 
-    @FXML // fx:id="txtTotalLinhas"
-    private JFXTextField txtTotalLinhas; // Value injected by FXMLLoader
+    @FXML
+    private JFXTextField txtTotalLinhas;
 
-    @FXML // fx:id="lblTempoProc"
-    private Label lblTempoProc; // Value injected by FXMLLoader
+    @FXML
+    private Label lblTempoProc;
 
-    @FXML // fx:id="txtTempoProc"
-    private JFXTextField txtTempoProc; // Value injected by FXMLLoader
+    @FXML
+    private JFXTextField txtTempoProc;
+
+    @FXML
+    private AnchorPane anchorPaneSplitFile;
+
+    @FXML
+    private JFXListView<File> listaViewFilesSplit;
+
+    @FXML
+    private Label lblLinhasPorArquivo;
+
+    @FXML
+    private JFXTextField txtLinhasPorArquivo;
+
+    @FXML
+    private JFXButton btnSplitFile;
 
     // variaveis uteis
     private File arq;
@@ -82,6 +113,13 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
     private BooleanProperty modeTask = new SimpleBooleanProperty();
     // private Long totalLinhas;
     private Long totalLinhasArquivo;
+    private Long totalLinhas;
+    private Task<Object> splitWorker;
+    private ObservableList<File> observableListFile;
+    private List<File> listaSplitFile;
+    private BooleanProperty dividirFile = new SimpleBooleanProperty();
+    private Long qtdLinhasPorArquivo;
+
     private Locale meuLocal = new Locale("pt", "BR");
     private NumberFormat nfVal = NumberFormat.getIntegerInstance(meuLocal);
 
@@ -90,7 +128,22 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
+	dividirFile.set(false);
+	modeTask.set(true);
+	// ao iniciar a var inicia como false e para disable o btn inverte seu valor
+	btnTask.disableProperty().bind(modeTask);
+	// so habiliata o btn se o campo textServico for =! de null ou txtLogin =! null
+	btnVrfFile.disableProperty().bind(txtNameFile.textProperty().isEmpty());
+	progress.setProgress(0);
 
+	btnSplitFile.setDisable(false);
+
+	// btnSplitFile
+
+	// System.out.println(modeTask);
+	// String dir = System.getProperty("user.home") + File.separator + "carga_seg_v"
+	// + File.separator + "partes";
+	carregarLista();
     }
 
     @FXML
@@ -212,11 +265,7 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 		Timer timer = new Timer();
 		String current = null;
 
-		try (BufferedReader br = new BufferedReader(
-			new InputStreamReader(new FileInputStream(fileName)))) {
-
-		    // frErros = new FileWriter(fileErros);
-		    // bufferErros = new BufferedWriter(frErros);
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)))) {
 
 		    modeTask.set(false);
 		    btnVrfFile.disableProperty().bind(editMode.not());
@@ -229,6 +278,7 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 			    modeTask.set(true);
 			    btnVrfFile.disableProperty().bind(editMode.not());
 			    btnSelectFile.disableProperty().bind(editMode.not());
+			    btnSplitFile.setDisable(true);
 			    // System.out.println("terminou 1");
 			    break;
 			}
@@ -264,6 +314,7 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 		    txtTotalLinhas.setStyle("-fx-text-fill: red; -fx-font-size: 13;");
 
 		    totalLinhasArquivo = nroLinha;
+		    totalLinhas = nroLinha;
 
 		    // System.out.println("Tempo de Processamento: " + timer);
 		    txtTempoProc.setText(timer.toString());
@@ -291,6 +342,22 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 	};
     }
 
+    @FXML
+    public void handleClickFile(MouseEvent event)
+    {
+	File file = listaViewFilesSplit.getSelectionModel().getSelectedItem();
+
+	if (file != null) {
+	    Optional<ButtonType> result = Helper.enviarPergunta(AlertType.CONFIRMATION, "Abrir Arquivo",
+		    "Selecionado o arquivo: " + file.getName(), "Deseja abrir?");
+
+	    if (result.get() == ButtonType.OK) {
+		Helper.openFile(file);
+	    }
+	}
+
+    }
+
     /**
      * nro 2 Responsavel para setar um titulo e um diretorio inicial para localizar
      * o arquivo
@@ -302,6 +369,306 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
     {
 	fileChooser.setTitle(nameTitle);
 	fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+    }
+
+    /**
+     * Para dividir o arquivo com base na quantidade de linhas passada
+     * 
+     * @param event
+     */
+    public void handlerBtnSplitFile(ActionEvent event)
+    {
+
+	if (txtLinhasPorArquivo.getText() == null || txtLinhasPorArquivo.getText().isEmpty()
+		|| txtLinhasPorArquivo.getText().equals("")) {
+
+	    Helper.enviarPergunta(AlertType.WARNING, "Atenção!", "Campo inválido, por favor, corrija...",
+		    "Mensagem: O Campo Total de Linhas por arquivo deve ser preenchido.");
+	} else {
+
+	    qtdLinhasPorArquivo = Long.parseLong(txtLinhasPorArquivo.getText());
+
+	    dividirFile.set(true);
+	    // splitWorker
+	    splitWorker = createWorkerSplitFile(this.arq.getPath());
+
+	    progress.setProgress(0);
+	    progress.progressProperty().unbind();
+	    progress.progressProperty().bind(splitWorker.progressProperty());
+	    lblStatus.textProperty().bind(splitWorker.messageProperty());
+
+	    // atribui uma acao para o button, caso seja press botao parar.
+	    btnTask.setOnAction(e -> {
+		if (splitWorker.isRunning()) {
+		    // System.out.println("valor copyWorker - getState: " + copyWorker.getState());
+		    // //RUNNING ou CANCELLED
+		    // System.out.println("cancelou 3");
+		    editMode.set(true);
+		    modeTask.set(true);
+		    btnVrfFile.disableProperty().bind(editMode.not());
+		    btnSelectFile.disableProperty().bind(editMode.not());
+
+		    progress.progressProperty().unbind();
+		    progress.setProgress(0);
+		    splitWorker.cancel();
+		}
+
+	    });
+
+	    // caso ocorra alguma excecao na Task
+	    splitWorker.setOnFailed(evt -> {
+		Optional<ButtonType> result = Helper.enviarPergunta(AlertType.ERROR, "Ocorreu um Erro",
+			"Houve um erro na verificação do arquivo!",
+			"Mensagem: " + copyWorker.getException().getLocalizedMessage());
+
+		if (result.get() == ButtonType.OK) {
+
+		    editMode.set(true);
+		    modeTask.set(true);
+		    btnVrfFile.disableProperty().bind(editMode.not());
+		    btnSelectFile.disableProperty().bind(editMode.not());
+		    progress.progressProperty().unbind();
+		    progress.setProgress(0);
+
+		}
+	    });
+
+	    // caso ocorra a leitura com sucesso
+	    splitWorker.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+		@Override
+		public void handle(WorkerStateEvent t)
+		{
+
+		    progress.progressProperty().unbind();
+		    progress.setProgress(1);
+
+		    Helper.enviarAlerta(AlertType.INFORMATION, "Sucesso", "Arquivo analisado com sucesso!",
+			    "Total de itens analisados no arquivo: " + nfVal.format(totalLinhas));
+
+		    // System.out.println("processo 2 finalizado");
+		    observableListFile.clear();
+		    listaViewFilesSplit.getItems().clear();
+
+		    // String dir = System.getProperty("user.home") + File.separator + "carga_seg_v"
+		    // + File.separator
+		    // + "partes";
+		    carregarLista();
+		    // carregarLista();// carrega a lista com os novo arquivos
+		    editMode.set(true);
+		    modeTask.set(true);
+		    btnVrfFile.disableProperty().bind(editMode.not());
+		    btnSelectFile.disableProperty().bind(editMode.not());
+		}
+	    });
+
+	    new Thread(splitWorker).start();
+	}
+    }
+
+    /**
+     * Executa o Processo para fazer a divisao do arquivo em arquivos menores
+     * 
+     * @param path
+     * @return
+     */
+    private Task<Object> createWorkerSplitFile(String fileName)
+    {
+	return new Task<Object>() {
+	    @Override
+	    protected Object call() throws Exception
+	    {
+
+		Long nro = 0L;
+		Long nroLinha = 0L;
+		Long nroLinhatraco = 0L;
+		String nsnAnterior = "";
+		Timer timer = new Timer();
+		String temp = "";
+		// String current = null;
+		// Long nol = 10L; // No. of lines to be split and saved in each output
+		// file.
+		Long nol = Long.parseLong(txtLinhasPorArquivo.getText());
+
+		// String diretorio = "D:\\DAbM\\CDs-RAW-DATA\\partes";
+		String dir = System.getProperty("user.home") + File.separator + "carga" + File.separator + "partes";
+		// Helper.deleteDirectory(new File(diretorio)); //right way to remove directory
+		// in Java
+
+		// File file = new File(diretorio);
+		File file = new File(dir);
+
+		FileUtils.forceMkdir(file);
+		FileUtils.cleanDirectory(file);
+
+		// System.out.println("passou: " + dir + "\n");
+		// System.out.println("passou: " + dividirFile.getValue() + "\n");
+
+		int nof = 1;
+		if (dividirFile.getValue()) {
+
+		    double tempLines = (double) totalLinhas / nol;
+
+		    int temp1 = 0;
+		    if (totalLinhas < nol) {
+			temp1 = 1;
+			tempLines = 1;
+		    } else {
+			temp1 = (int) tempLines;
+		    }
+
+		    // System.out.println("passou: " + (temp1 == tempLines) + "\n");
+		    // System.out.println("passou: " + temp1 + "\n");
+		    // System.out.println("passou: " + tempLines + "\n");
+		    nof = 0;
+		    if (temp1 == tempLines) {
+			nof = temp1;
+			// System.out.println("igual" + nof);
+		    } else {
+			nof = temp1 + 1;
+			// System.out.println("nao igual" + nof);
+		    }
+
+		} else {
+		    nol = totalLinhas;
+		}
+
+		// System.out.println("passou: " + totalLinhas + "\n");
+		// Displays no of files to be generated.
+		// System.out.println("No. of files to be generated :" + nof);
+		// System.out.println("No. linhas p/arquivo :" + nol);
+
+		try {
+
+		    modeTask.set(false);
+		    btnVrfFile.disableProperty().bind(editMode);
+		    btnSelectFile.disableProperty().bind(editMode);
+
+		    FileInputStream fstream = new FileInputStream(fileName);
+		    DataInputStream in = new DataInputStream(fstream);
+
+		    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		    String strLine;
+
+		    for (int j = 1; j <= nof; j++) {
+
+			// Destination File Location
+			FileWriter fstream1 = new FileWriter(dir + File.separator + "file_" + j + ".csv");
+			// se for dividir entao progresso
+			if (dividirFile.getValue()) {
+			    updateProgress(j, nof);
+			    updateMessage("Arquivo parte " + nfVal.format(j) + " complete");
+			    // Thread.sleep(10); // 28/11/17
+			}
+
+			BufferedWriter out = new BufferedWriter(fstream1);
+			for (int i = 1; i <= nol; i++) {
+
+			    strLine = br.readLine();
+			    if (strLine != null) {
+				nro++;
+				out.write(strLine);
+
+				if (i != nol) {
+				    out.newLine();
+				}
+			    }
+
+			} // fim segundo for
+			out.close();
+		    } // fim primeiro for
+
+		    if (dividirFile.getValue()) {
+			updateMessage(nof + " arquivos gerado(s) pelo sistema.");
+		    } else {
+			updateMessage(nof + " arquivo gerado pelo sistema. Total: " + nfVal.format(nol));
+		    }
+
+		    txtTempoProc.setText(timer.toString());
+		    txtTempoProc.setStyle("-fx-text-fill: blue; -fx-font-size: 13;");
+
+		    in.close();
+
+		} catch (Exception ex) {
+		    // ex.printStackTrace();
+		    LOGGER.error("[Exception] " + ex.getMessage());
+
+		    throw ex;
+		}
+
+		return true;
+	    }
+
+	};
+    }
+
+    /**
+     * carrega a lista dos arquivos dividitos
+     */
+    private void carregarLista()
+    {
+
+	// String diretorio = "D:\\DAbM\\CDs-RAW-DATA\\partes";
+	String dir = System.getProperty("user.home") + File.separator + "carga" + File.separator + "partes";
+	// System.out.println(dir);
+	// Path rootPath = Paths.get(System.getProperty("user.home") + File.separator +
+	// "carga_seg_v" + File.separator + "partes");
+
+	File file = new File(dir);
+
+	if (!file.isDirectory()) {
+	    try {
+		FileUtils.forceMkdir(file);
+	    } catch (IOException e) {
+		// e.printStackTrace();
+		LOGGER.error("[IOException] " + e.getMessage());
+	    }
+	}
+
+	// File file = new File(diretorio);
+	File afile[] = file.listFiles();
+
+	listaSplitFile = new ArrayList<>();
+
+	int i = 0;
+	for (int j = afile.length; i < j; i++) {
+	    File arquivos = afile[i];
+	    // System.out.println(arquivos.getAbsolutePath());
+	    listaSplitFile.add(arquivos);
+	}
+
+	observableListFile = FXCollections.observableArrayList(listaSplitFile);
+	listaViewFilesSplit.setItems(observableListFile);
+
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	listaViewFilesSplit.setCellFactory(new Callback<ListView<File>, ListCell<File>>() {
+
+	    @Override
+	    public ListCell<File> call(ListView<File> param)
+	    {
+		ListCell<File> cell = new ListCell<File>() {
+
+		    @Override
+		    protected void updateItem(File t, boolean bln)
+		    {
+			super.updateItem(t, bln);
+			if (t != null) {
+			    setText(t.getAbsoluteFile() + " ( Modificado: " + sdf.format(t.lastModified()) + " "
+				    + "Tamanho: " + FileUtils.byteCountToDisplaySize(t.length()) + ")");
+			}
+		    }
+
+		};
+
+		return cell;
+	    }
+	});
+
+    }
+
+    public void setTotalLinhas(String total)
+    {
+	// totalLinhas = Long.parseLong(total);
+	txtTotalLinhas.setText(total);
     }
 
 }
