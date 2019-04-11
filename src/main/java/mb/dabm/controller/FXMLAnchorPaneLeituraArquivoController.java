@@ -30,6 +30,8 @@ import com.jfoenix.controls.JFXTextField;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -57,62 +59,51 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 
     @FXML
     private AnchorPane root;
-
     @FXML
     private JFXButton btnSelectFile;
-
     @FXML
     private JFXButton btnVrfFile;
-
     @FXML
     private JFXTextField txtNameFile;
-
     @FXML
     private JFXProgressBar progress;
-
     @FXML
     private Label lblStatus;
-
     @FXML
     private JFXButton btnTask;
-
     @FXML
     private AnchorPane anchorPaneResumo;
-
     @FXML
     private Label lblTotalLinhas;
-
     @FXML
     private JFXTextField txtTotalLinhas;
-
     @FXML
     private Label lblTempoProc;
-
     @FXML
     private JFXTextField txtTempoProc;
-
     @FXML
     private AnchorPane anchorPaneSplitFile;
-
     @FXML
     private JFXListView<File> listaViewFilesSplit;
-
     @FXML
     private Label lblLinhasPorArquivo;
-
     @FXML
     private JFXTextField txtLinhasPorArquivo;
-
     @FXML
     private JFXButton btnSplitFile;
+    @FXML
+    private JFXProgressBar progressParte;
+    @FXML
+    private Label lblStatusParte;
 
     // variaveis uteis
     private File arq;
     private Task<Object> copyWorker;
     private BooleanProperty editMode = new SimpleBooleanProperty();
     private BooleanProperty modeTask = new SimpleBooleanProperty();
+    private StringProperty valorFileSplit = new SimpleStringProperty();
     // private Long totalLinhas;
-    private Long totalLinhasArquivo;
+    // private Long totalLinhasArquivo;
     private Long totalLinhas;
     private Task<Object> splitWorker;
     private ObservableList<File> observableListFile;
@@ -134,9 +125,13 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 	btnTask.disableProperty().bind(modeTask);
 	// so habiliata o btn se o campo textServico for =! de null ou txtLogin =! null
 	btnVrfFile.disableProperty().bind(txtNameFile.textProperty().isEmpty());
-	progress.setProgress(0);
 
-	btnSplitFile.setDisable(false);
+	progress.setProgress(0);
+	btnSplitFile.setDisable(true);
+
+	progressParte.setProgress(0);
+	progressParte.setVisible(false);
+	lblStatusParte.setVisible(false);
 
 	// btnSplitFile
 
@@ -278,7 +273,7 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 			    modeTask.set(true);
 			    btnVrfFile.disableProperty().bind(editMode.not());
 			    btnSelectFile.disableProperty().bind(editMode.not());
-			    btnSplitFile.setDisable(true);
+			    btnSplitFile.setDisable(false);
 			    // System.out.println("terminou 1");
 			    break;
 			}
@@ -313,7 +308,7 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 		    txtTotalLinhas.setText(nfVal.format(nroLinha));
 		    txtTotalLinhas.setStyle("-fx-text-fill: red; -fx-font-size: 13;");
 
-		    totalLinhasArquivo = nroLinha;
+		    // totalLinhasArquivo = nroLinha;
 		    totalLinhas = nroLinha;
 
 		    // System.out.println("Tempo de Processamento: " + timer);
@@ -396,6 +391,8 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 	    progress.progressProperty().unbind();
 	    progress.progressProperty().bind(splitWorker.progressProperty());
 	    lblStatus.textProperty().bind(splitWorker.messageProperty());
+	    //@todo 10-04-19 anders
+	    //lblStatusParte.textProperty().bind(valorFileSplit);
 
 	    // atribui uma acao para o button, caso seja press botao parar.
 	    btnTask.setOnAction(e -> {
@@ -441,6 +438,8 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 
 		    progress.progressProperty().unbind();
 		    progress.setProgress(1);
+		    
+		    btnSplitFile.setDisable(false);
 
 		    Helper.enviarAlerta(AlertType.INFORMATION, "Sucesso", "Arquivo analisado com sucesso!",
 			    "Total de itens analisados no arquivo: " + nfVal.format(totalLinhas));
@@ -479,15 +478,15 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 	    {
 
 		Long nro = 0L;
-		Long nroLinha = 0L;
-		Long nroLinhatraco = 0L;
-		String nsnAnterior = "";
+		// Long nroLinha = 0L;
+		// Long nroLinhatraco = 0L;
+		// String nsnAnterior = "";
 		Timer timer = new Timer();
-		String temp = "";
+		// String temp = "";
 		// String current = null;
 		// Long nol = 10L; // No. of lines to be split and saved in each output
 		// file.
-		Long nol = Long.parseLong(txtLinhasPorArquivo.getText());
+		Long nol = qtdLinhasPorArquivo;
 
 		// String diretorio = "D:\\DAbM\\CDs-RAW-DATA\\partes";
 		String dir = System.getProperty("user.home") + File.separator + "carga" + File.separator + "partes";
@@ -542,6 +541,10 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 		    modeTask.set(false);
 		    btnVrfFile.disableProperty().bind(editMode);
 		    btnSelectFile.disableProperty().bind(editMode);
+		    
+		    progressParte.setVisible(true);
+		    lblStatusParte.setVisible(true);
+		    btnSplitFile.setDisable(true);
 
 		    FileInputStream fstream = new FileInputStream(fileName);
 		    DataInputStream in = new DataInputStream(fstream);
@@ -559,9 +562,19 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 			    updateMessage("Arquivo parte " + nfVal.format(j) + " complete");
 			    // Thread.sleep(10); // 28/11/17
 			}
+			
+			progressParte.setProgress(0);
 
 			BufferedWriter out = new BufferedWriter(fstream1);
 			for (int i = 1; i <= nol; i++) {
+
+			    double perc = (double) i / nol;
+			    //System.out.println("percentual" + perc);
+			    progressParte.setProgress(perc);
+			    //lblStatusParte.textProperty().setValue("dd");
+			    //valorFileSplit.set("123");
+			    //lblStatusParte.setText("123");
+			    //Thread.sleep(10);
 
 			    strLine = br.readLine();
 			    if (strLine != null) {

@@ -1,6 +1,6 @@
 # Projeto CargaDadosFX
 
-Projeto de uso pessoal simples em Java Desktop com **JavaFX** de Contagem de linhas arquivos **csv** e **txt**.
+Projeto de uso pessoal simples em Java Desktop com **JavaFX** de Contagem e Tratamento de linhas de arquivos **csv** e **txt**.
 
 ## Tecnologias utilizadas
 

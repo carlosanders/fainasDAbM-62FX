@@ -13,31 +13,17 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity"
-	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-	prefHeight="580.0" prefWidth="800.0"
-	xmlns="http://javafx.com/javafx/8.0.171"
-	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="mb.dabm.controller.FXMLAnchorPaneLeituraArquivoController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mb.dabm.controller.FXMLAnchorPaneLeituraArquivoController">
 	<children>
-		<JFXButton fx:id="btnSelectFile" buttonType="RAISED"
-			layoutX="11.0" layoutY="8.0" onAction="#btnAbrirClickFile"
-			prefHeight="40.0" prefWidth="135.0"
-			style="-fx-background-insets: 0,0,-1,0;" styleClass="btn_primary"
-			stylesheets="@../css/layout.css" text="Selecionar...">
+		<JFXButton fx:id="btnSelectFile" buttonType="RAISED" layoutX="11.0" layoutY="8.0" onAction="#btnAbrirClickFile" prefHeight="40.0" prefWidth="135.0" style="-fx-background-insets: 0,0,-1,0;" styleClass="btn_primary" stylesheets="@../css/layout.css" text="Selecionar...">
 			<font>
 				<Font size="14.0" />
 			</font>
 			<graphic>
-				<FontAwesomeIconView glyphName="FOLDER_OPEN_ALT"
-					size="20.0" />
+				<FontAwesomeIconView glyphName="FOLDER_OPEN_ALT" size="20.0" />
 			</graphic>
 		</JFXButton>
-		<JFXButton fx:id="btnVrfFile" buttonType="RAISED"
-			layoutX="11.0" layoutY="59.0" onAction="#onProcessarLeitura"
-			prefHeight="40.0" prefWidth="135.0"
-			style="-fx-background-insets: 0,0,-1,0;" styleClass="success"
-			stylesheets="@../css/layout.css" text="Verificar">
+		<JFXButton fx:id="btnVrfFile" buttonType="RAISED" layoutX="11.0" layoutY="59.0" onAction="#onProcessarLeitura" prefHeight="40.0" prefWidth="135.0" style="-fx-background-insets: 0,0,-1,0;" styleClass="success" stylesheets="@../css/layout.css" text="Verificar">
 			<font>
 				<Font size="14.0" />
 			</font>
@@ -45,15 +31,9 @@
 				<FontIcon iconLiteral="fa-file-text-o" iconSize="20" />
 			</graphic>
 		</JFXButton>
-		<JFXTextField fx:id="txtNameFile" disable="true"
-			editable="false" layoutX="165.0" layoutY="16.0" prefHeight="25.0"
-			prefWidth="620.0" />
-		<JFXProgressBar fx:id="progress" layoutX="165.0"
-			layoutY="79.0" prefHeight="15.0" prefWidth="620.0" />
-		<Separator layoutX="12.0" layoutY="174.0" prefHeight="3.0"
-			prefWidth="786.0" />
-		<Label fx:id="lblStatus" layoutX="165.0" layoutY="59.0"
-			prefHeight="15.0" prefWidth="620.0" text="Contador:">
+		<JFXTextField fx:id="txtNameFile" disable="true" editable="false" layoutX="165.0" layoutY="11.0" prefHeight="25.0" prefWidth="620.0" />
+		<JFXProgressBar fx:id="progress" layoutX="165.0" layoutY="72.0" prefHeight="15.0" prefWidth="620.0" />
+		<Label fx:id="lblStatus" layoutX="165.0" layoutY="52.0" prefHeight="15.0" prefWidth="620.0" text="Contador:">
 			<padding>
 				<Insets left="5.0" />
 			</padding>
@@ -61,62 +41,45 @@
 				<Font name="System Bold" size="12.0" />
 			</font>
 		</Label>
-		<JFXButton fx:id="btnTask" buttonType="RAISED"
-			layoutX="11.0" layoutY="110.0" prefHeight="40.0" prefWidth="135.0"
-			style="-fx-background-insets: 0,0,-1,0;" styleClass="danger"
-			stylesheets="@../css/layout.css" text="Parar">
+		<Separator layoutX="12.0" layoutY="178.0" prefHeight="3.0" prefWidth="786.0" />
+		<JFXButton fx:id="btnTask" buttonType="RAISED" layoutX="11.0" layoutY="110.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-insets: 0,0,-1,0;" styleClass="danger" stylesheets="@../css/layout.css" text="Parar">
 			<font>
 				<Font size="14.0" />
 			</font>
 			<graphic>
-				<FontAwesomeIconView glyphName="STOP_CIRCLE_ALT"
-					size="20.0" />
+				<FontAwesomeIconView glyphName="STOP_CIRCLE_ALT" size="20.0" />
 			</graphic>
 		</JFXButton>
-		<AnchorPane fx:id="anchorPaneResumo" layoutX="166.0"
-			layoutY="108.0" prefHeight="50.0" prefWidth="620.0">
+		<AnchorPane fx:id="anchorPaneResumo" layoutX="166.0" layoutY="133.0" prefHeight="40.0" prefWidth="620.0">
 			<children>
-				<Label fx:id="lblTotalLinhas" layoutX="6.0" layoutY="11.0"
-					text="Linhas existentes:">
+				<Label fx:id="lblTotalLinhas" layoutX="6.0" layoutY="11.0" text="Linhas existentes:">
 					<font>
 						<Font name="System Bold" size="12.0" />
 					</font>
 				</Label>
-				<JFXTextField fx:id="txtTotalLinhas" editable="false"
-					layoutX="115.0" layoutY="2.0" prefHeight="25.0" prefWidth="160.0" />
-				<Label fx:id="lblTempoProc" layoutX="291.0" layoutY="11.0"
-					text="Tempo processamento:">
+				<JFXTextField fx:id="txtTotalLinhas" editable="false" layoutX="115.0" layoutY="2.0" prefHeight="25.0" prefWidth="160.0" />
+				<Label fx:id="lblTempoProc" layoutX="291.0" layoutY="11.0" text="Tempo processamento:">
 					<font>
 						<Font name="System Bold" size="12.0" />
 					</font>
 				</Label>
-				<JFXTextField fx:id="txtTempoProc" editable="false"
-					layoutX="433.0" layoutY="2.0" prefHeight="25.0" prefWidth="160.0" />
+				<JFXTextField fx:id="txtTempoProc" editable="false" layoutX="433.0" layoutY="2.0" prefHeight="25.0" prefWidth="160.0" />
 			</children>
 		</AnchorPane>
-		<AnchorPane fx:id="anchorPaneSplitFile" layoutX="8.0"
-			layoutY="185.0" prefHeight="385.0" prefWidth="786.0">
+		<AnchorPane fx:id="anchorPaneSplitFile" layoutX="8.0" layoutY="185.0" prefHeight="385.0" prefWidth="786.0">
 			<children>
-				<JFXListView fx:id="listaViewFilesSplit" layoutY="45.0"
-					onMouseClicked="#handleClickFile"
-					prefHeight="339.0" prefWidth="786.0" />
-				<Label fx:id="lblLinhasPorArquivo" layoutX="3.0"
-					layoutY="18.0" text="Total de Linhas por arquivo:"
-					textFill="#030ed7">
+				<JFXListView fx:id="listaViewFilesSplit" layoutY="45.0" onMouseClicked="#handleClickFile" prefHeight="339.0" prefWidth="786.0" />
+				<Label fx:id="lblLinhasPorArquivo" layoutX="3.0" layoutY="18.0" text="Total de Linhas por arquivo:" textFill="#030ed7">
 					<font>
 						<Font name="System Bold" size="12.0" />
 					</font>
 				</Label>
-				<JFXTextField fx:id="txtLinhasPorArquivo"
-					layoutX="175.0" layoutY="9.0" prefHeight="25.0" prefWidth="106.0"
-					text="5000">
+				<JFXTextField fx:id="txtLinhasPorArquivo" layoutX="175.0" layoutY="9.0" prefHeight="25.0" prefWidth="106.0" text="5000">
 					<font>
 						<Font name="System Bold" size="12.0" />
 					</font>
 				</JFXTextField>
-				<JFXButton fx:id="btnSplitFile" layoutX="290.0"
-					layoutY="6.0" onAction="#handlerBtnSplitFile"
-					stylesheets="@../css/bootstrap3.css" text="Particionar Arquivo">
+				<JFXButton fx:id="btnSplitFile" layoutX="290.0" layoutY="6.0" onAction="#handlerBtnSplitFile" stylesheets="@../css/bootstrap3.css" text="Particionar Arquivo">
 					<styleClass>
 						<String fx:value="action-btn" />
 						<String fx:value="sm" />
@@ -124,5 +87,14 @@
 				</JFXButton>
 			</children>
 		</AnchorPane>
+      <JFXProgressBar fx:id="progressParte" layoutX="165.0" layoutY="118.0" prefHeight="10.0" prefWidth="620.0" />
+      <Label fx:id="lblStatusParte" layoutX="165.0" layoutY="99.0" prefHeight="15.0" prefWidth="620.0" text="Contador:">
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
 	</children>
 </AnchorPane>
