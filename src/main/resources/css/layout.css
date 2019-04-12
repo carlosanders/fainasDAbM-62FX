@@ -115,3 +115,19 @@
 .jfx-text-field {
 	-fx-prompt-text-fill: #b9b9b9;
 }
+
+
+.custom-jfx-progress-bar > .bar {
+    -fx-background-color: #ff8000;
+}
+
+.custom-jfx-progress-bar > .secondary-bar {
+    -fx-background-color: rgba(255, 135, 21, 0.18);
+}
+
+.custom-jfx-progress-bar-stroke > .bar {
+    -fx-background-color: #5264AE;
+    -fx-padding: 6;
+}
+
+

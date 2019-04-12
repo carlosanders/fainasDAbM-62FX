@@ -17,8 +17,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.xml.bind.ParseConversionEvent;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,8 +28,6 @@ import com.jfoenix.controls.JFXTextField;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -46,6 +42,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -88,20 +86,22 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
     @FXML
     private Label lblLinhasPorArquivo;
     @FXML
-    private JFXTextField txtLinhasPorArquivo;
-    @FXML
     private JFXButton btnSplitFile;
     @FXML
     private JFXProgressBar progressParte;
     @FXML
     private Label lblStatusParte;
+    @FXML
+    private TitledPane titledPane;
+    @FXML
+    private TextField txtLinhasPorArquivo;
 
     // variaveis uteis
     private File arq;
     private Task<Object> copyWorker;
     private BooleanProperty editMode = new SimpleBooleanProperty();
     private BooleanProperty modeTask = new SimpleBooleanProperty();
-    private StringProperty valorFileSplit = new SimpleStringProperty();
+    //private StringProperty valorFileSplit = new SimpleStringProperty();
     // private Long totalLinhas;
     // private Long totalLinhasArquivo;
     private Long totalLinhas;
@@ -439,12 +439,16 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 		    progress.progressProperty().unbind();
 		    progress.setProgress(1);
 		    
+		    //int totalItens = listaViewFilesSplit.getItems().size();
+		    //"Processo finalizado: " + nfVal.format(nroLinha) + " Linhas lidas!"
+		    lblStatusParte.setText("Subprocesso finalizado.");
+		    
 		    btnSplitFile.setDisable(false);
 
 		    Helper.enviarAlerta(AlertType.INFORMATION, "Sucesso", "Arquivo analisado com sucesso!",
 			    "Total de itens analisados no arquivo: " + nfVal.format(totalLinhas));
 
-		    // System.out.println("processo 2 finalizado");
+		    // System.out.println("processo 2 finalizado");		    
 		    observableListFile.clear();
 		    listaViewFilesSplit.getItems().clear();
 
@@ -452,6 +456,7 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 		    // + File.separator
 		    // + "partes";
 		    carregarLista();
+		    
 		    // carregarLista();// carrega a lista com os novo arquivos
 		    editMode.set(true);
 		    modeTask.set(true);
@@ -556,10 +561,11 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 
 			// Destination File Location
 			FileWriter fstream1 = new FileWriter(dir + File.separator + "file_" + j + ".csv");
+			
 			// se for dividir entao progresso
 			if (dividirFile.getValue()) {
 			    updateProgress(j, nof);
-			    updateMessage("Arquivo parte " + nfVal.format(j) + " complete");
+			    updateMessage("Arquivo 'file_" + j + ".csv' concluido.");
 			    // Thread.sleep(10); // 28/11/17
 			}
 			
@@ -591,9 +597,9 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 		    } // fim primeiro for
 
 		    if (dividirFile.getValue()) {
-			updateMessage(nof + " arquivos gerado(s) pelo sistema.");
+			updateMessage("Processo Finalizado. " + nof + " arquivos gerados pelo sistema.");
 		    } else {
-			updateMessage(nof + " arquivo gerado pelo sistema. Total: " + nfVal.format(nol));
+			updateMessage("Processo Finalizado. " + nof + " arquivo gerado pelo sistema. Total: " + nfVal.format(nol));
 		    }
 
 		    txtTempoProc.setText(timer.toString());

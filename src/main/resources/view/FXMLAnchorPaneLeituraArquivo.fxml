@@ -9,6 +9,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
@@ -41,7 +43,6 @@
 				<Font name="System Bold" size="12.0" />
 			</font>
 		</Label>
-		<Separator layoutX="12.0" layoutY="178.0" prefHeight="3.0" prefWidth="786.0" />
 		<JFXButton fx:id="btnTask" buttonType="RAISED" layoutX="11.0" layoutY="110.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-insets: 0,0,-1,0;" styleClass="danger" stylesheets="@../css/layout.css" text="Parar">
 			<font>
 				<Font size="14.0" />
@@ -66,35 +67,39 @@
 				<JFXTextField fx:id="txtTempoProc" editable="false" layoutX="433.0" layoutY="2.0" prefHeight="25.0" prefWidth="160.0" />
 			</children>
 		</AnchorPane>
-		<AnchorPane fx:id="anchorPaneSplitFile" layoutX="8.0" layoutY="185.0" prefHeight="385.0" prefWidth="786.0">
-			<children>
-				<JFXListView fx:id="listaViewFilesSplit" layoutY="45.0" onMouseClicked="#handleClickFile" prefHeight="339.0" prefWidth="786.0" />
-				<Label fx:id="lblLinhasPorArquivo" layoutX="3.0" layoutY="18.0" text="Total de Linhas por arquivo:" textFill="#030ed7">
-					<font>
-						<Font name="System Bold" size="12.0" />
-					</font>
-				</Label>
-				<JFXTextField fx:id="txtLinhasPorArquivo" layoutX="175.0" layoutY="9.0" prefHeight="25.0" prefWidth="106.0" text="5000">
-					<font>
-						<Font name="System Bold" size="12.0" />
-					</font>
-				</JFXTextField>
-				<JFXButton fx:id="btnSplitFile" layoutX="290.0" layoutY="6.0" onAction="#handlerBtnSplitFile" stylesheets="@../css/bootstrap3.css" text="Particionar Arquivo">
-					<styleClass>
-						<String fx:value="action-btn" />
-						<String fx:value="sm" />
-					</styleClass>
-				</JFXButton>
-			</children>
-		</AnchorPane>
-      <JFXProgressBar fx:id="progressParte" layoutX="165.0" layoutY="118.0" prefHeight="10.0" prefWidth="620.0" />
-      <Label fx:id="lblStatusParte" layoutX="165.0" layoutY="99.0" prefHeight="15.0" prefWidth="620.0" text="Contador:">
-         <padding>
-            <Insets left="5.0" />
-         </padding>
+      <TitledPane fx:id="titledPane" layoutX="8.0" layoutY="185.0" styleClass="primary" stylesheets="@../css/bootstrap3.css" text="Lista de Arquivos">
+         <content>
+      		<AnchorPane fx:id="anchorPaneSplitFile" prefHeight="340.0" prefWidth="784.0">
+      			<children>
+      				<JFXListView fx:id="listaViewFilesSplit" layoutX="18.0" layoutY="45.0" onMouseClicked="#handleClickFile" prefHeight="274.0" prefWidth="746.0" />
+      				<Label fx:id="lblLinhasPorArquivo" layoutX="18.0" layoutY="15.0" text="Total de Linhas por arquivo:" textFill="#030ed7">
+      					<font>
+      						<Font name="System Bold" size="12.0" />
+      					</font>
+      				</Label>
+      				<JFXButton fx:id="btnSplitFile" layoutX="319.0" layoutY="9.0" onAction="#handlerBtnSplitFile" stylesheets="@../css/bootstrap3.css" text="Particionar Arquivo">
+      					<styleClass>
+      						<String fx:value="action-btn" />
+      						<String fx:value="sm" />
+      					</styleClass>
+      				</JFXButton>
+                  <TextField fx:id="txtLinhasPorArquivo" layoutX="184.0" layoutY="9.0" prefWidth="119.0" />
+                  <Separator layoutX="310.0" layoutY="13.0" orientation="VERTICAL" prefHeight="0.0" prefWidth="1.0" />
+      			</children>
+      		</AnchorPane>
+         </content>
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
-      </Label>
+      </TitledPane>
+		<JFXProgressBar fx:id="progressParte" layoutX="165.0" layoutY="118.0" prefHeight="10.0" prefWidth="620.0" styleClass="custom-jfx-progress-bar" stylesheets="@../css/layout.css" />
+		<Label fx:id="lblStatusParte" layoutX="165.0" layoutY="99.0" prefHeight="15.0" prefWidth="620.0" text="processando...">
+			<padding>
+				<Insets left="5.0" />
+			</padding>
+			<font>
+				<Font name="System Bold" size="12.0" />
+			</font>
+		</Label>
 	</children>
 </AnchorPane>
