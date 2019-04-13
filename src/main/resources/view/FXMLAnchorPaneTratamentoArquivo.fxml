@@ -172,7 +172,7 @@
 		<TitledPane fx:id="titledPane" layoutX="8.0"
 			layoutY="185.0" styleClass="primary"
 			stylesheets="@../css/bootstrap3.css"
-			text="Lista de Arquivos Tratados">
+			text="Listando...">
 			<content>
 				<AnchorPane fx:id="anchorPaneListView" prefHeight="340.0"
 					prefWidth="784.0">
@@ -204,6 +204,11 @@
 		</JFXButton>
 		<JFXTextField fx:id="txtNamePath" disable="true"
 			editable="false" layoutX="191.0" layoutY="13.0" prefHeight="25.0"
-			prefWidth="595.0" />
+			prefWidth="595.0" promptText="" styleClass="jfx-label-field"
+			stylesheets="@../css/layout.css">
+			<font>
+				<Font name="Arial" size="12.0" />
+			</font>
+		</JFXTextField>
 	</children>
 </AnchorPane>
