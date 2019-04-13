@@ -36,10 +36,8 @@ public class FXMLVBoxMainController implements Initializable
     private Label lblAutor;    
     @FXML
     private Label lblTotal;
-    
     private static final Logger LOGGER = LogManager.getLogger(FXMLVBoxMainController.class.getName());
 
-    //private String totalLinhas;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -70,8 +68,7 @@ public class FXMLVBoxMainController implements Initializable
     @FXML
     public void handleMenuItemTratamentoArquivo(ActionEvent event) throws IOException
     {
-	AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/FXMLAnchorPaneLeituraArquivo.fxml"));
-
+	AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/FXMLAnchorPaneTratamentoArquivo.fxml"));
 	anchorPane.getChildren().setAll(a);
     }
 
@@ -80,7 +77,6 @@ public class FXMLVBoxMainController implements Initializable
     public void handleMenuItemGerarArquivo(ActionEvent event) throws IOException
     {
 	AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/FXMLAnchorPaneLeituraArquivo.fxml"));
-
 	anchorPane.getChildren().setAll(a);
     }
 
@@ -91,6 +87,9 @@ public class FXMLVBoxMainController implements Initializable
 	// TODO Anders - Implementar acao About
     }
 
+    /**
+     * Metodo para ler arquivo properties
+     */
     private void lerAppProperties()
     {
 	Properties props = new Properties();
@@ -99,7 +98,6 @@ public class FXMLVBoxMainController implements Initializable
 	    props.load(is);
 	    is.close();
 	} catch (IOException e) {
-	    //e.printStackTrace();
 	    LOGGER.error("IOException! " + e.getMessage());
 	}
 

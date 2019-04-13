@@ -101,16 +101,12 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
     private Task<Object> copyWorker;
     private BooleanProperty editMode = new SimpleBooleanProperty();
     private BooleanProperty modeTask = new SimpleBooleanProperty();
-    //private StringProperty valorFileSplit = new SimpleStringProperty();
-    // private Long totalLinhas;
-    // private Long totalLinhasArquivo;
     private Long totalLinhas;
     private Task<Object> splitWorker;
     private ObservableList<File> observableListFile;
     private List<File> listaSplitFile;
     private BooleanProperty dividirFile = new SimpleBooleanProperty();
     private Long qtdLinhasPorArquivo;
-
     private Locale meuLocal = new Locale("pt", "BR");
     private NumberFormat nfVal = NumberFormat.getIntegerInstance(meuLocal);
 
@@ -133,11 +129,6 @@ public class FXMLAnchorPaneLeituraArquivoController implements Initializable
 	progressParte.setVisible(false);
 	lblStatusParte.setVisible(false);
 
-	// btnSplitFile
-
-	// System.out.println(modeTask);
-	// String dir = System.getProperty("user.home") + File.separator + "carga_seg_v"
-	// + File.separator + "partes";
 	carregarLista();
     }
 

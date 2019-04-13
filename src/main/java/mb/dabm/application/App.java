@@ -1,5 +1,8 @@
 package mb.dabm.application;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,8 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-public class Main extends Application
+public class App extends Application
 {
+    private static final Logger LOGGER = LogManager.getLogger(App.class.getName());
+    
     @Override
     public void start(Stage primaryStage)
     {
@@ -27,7 +32,8 @@ public class Main extends Application
 	    
 	    
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    //e.printStackTrace();
+	    LOGGER.error("Exception - App! " + e.getMessage());
 	}
     }
 

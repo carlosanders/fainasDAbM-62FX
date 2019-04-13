@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity"
+	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	prefHeight="580.0" prefWidth="800.0"
+	xmlns="http://javafx.com/javafx/8.0.171"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="mb.dabm.controller.FXMLAnchorPaneTratamentoArquivoController">
+	<children>
+		<AnchorPane fx:id="anchorPaneHeader" layoutX="3.0"
+			layoutY="44.0" prefHeight="99.0" prefWidth="786.0">
+			<children>
+				<JFXButton fx:id="btnVrfFile" buttonType="RAISED"
+					layoutX="665.0" layoutY="25.0" onAction="#onProcessarLeitura"
+					prefHeight="30.0" prefWidth="120.0"
+					style="-fx-background-insets: 0,0,-1,0;" styleClass="success"
+					stylesheets="@../css/layout.css" text="Verificar">
+					<font>
+						<Font size="14.0" />
+					</font>
+					<graphic>
+						<FontIcon fill="#034017" iconLiteral="fa-file-text-o"
+							iconSize="20" />
+					</graphic>
+				</JFXButton>
+				<JFXProgressBar fx:id="progress" layoutX="10.0"
+					layoutY="84.0" prefHeight="15.0" prefWidth="648.0" />
+				<Label fx:id="lblStatus" layoutX="5.0" layoutY="64.0"
+					prefHeight="17.0" prefWidth="648.0" text="Processando...">
+					<padding>
+						<Insets left="5.0" />
+					</padding>
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</Label>
+				<JFXButton fx:id="btnTask" buttonType="RAISED"
+					layoutX="665.0" layoutY="67.0" prefHeight="30.0" prefWidth="120.0"
+					style="-fx-background-insets: 0,0,-1,0;" styleClass="danger"
+					stylesheets="@../css/layout.css" text="Parar">
+					<font>
+						<Font size="14.0" />
+					</font>
+					<graphic>
+						<FontAwesomeIconView fill="#5b0202"
+							glyphName="STOP_CIRCLE_ALT" size="20.0" />
+					</graphic>
+				</JFXButton>
+				<JFXCheckBox fx:id="cbIgnoarLinha1"
+					alignment="CENTER_RIGHT" ellipsisString="" layoutX="12.0"
+					layoutY="10.0" selected="true" text="Ignorar 1ª Linha">
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</JFXCheckBox>
+				<Label fx:id="lblLinesTerminated" layoutX="11.0"
+					layoutY="40.0" text="Linhas Terminadas:">
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</Label>
+				<JFXTextField fx:id="txtLinesTerminated"
+					focusColor="#0f9d58" layoutX="130.0" layoutY="28.0"
+					prefHeight="26.0" prefWidth="50.0" text="\\n"
+					unFocusColor="#0f0f0f">
+					<tooltip>
+						<Tooltip
+							text="Especifica a sequência de caracteres com a qual cada linha de entrada termina." />
+					</tooltip>
+					<font>
+						<Font name="Monospaced Bold" size="13.0" />
+					</font>
+				</JFXTextField>
+				<Label fx:id="lblDelimitador" layoutX="185.0" layoutY="40.0"
+					text="Delimitador:">
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</Label>
+				<JFXTextField fx:id="txtDelimitador"
+					focusColor="#0f9d58" layoutX="265.0" layoutY="28.0"
+					prefHeight="25.0" prefWidth="50.0" text="\\t"
+					unFocusColor="#0f0f0f">
+					<font>
+						<Font name="Monospaced Bold" size="13.0" />
+					</font>
+					<tooltip>
+						<Tooltip
+							text="Especifica o delimitador entre os valores de dados nas linhas de entrada." />
+					</tooltip>
+				</JFXTextField>
+				<Label fx:id="lblEnclosed" layoutX="321.0" layoutY="40.0"
+					text="Campo cercado por:">
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</Label>
+				<JFXTextField fx:id="txtEnclosed" focusColor="#0f9d58"
+					layoutX="445.0" layoutY="28.0" prefHeight="25.0" prefWidth="50.0"
+					text="&quot;" unFocusColor="#0f0f0f">
+					<font>
+						<Font name="Monospaced Bold" size="13.0" />
+					</font>
+					<tooltip>
+						<Tooltip
+							text="Indica um caractere de aspas que envolve os valores de dados no arquivo." />
+					</tooltip>
+				</JFXTextField>
+				<Label fx:id="lblEscaped" layoutX="498.0" layoutY="40.0"
+					text="Campo escapado:">
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</Label>
+				<JFXTextField fx:id="txtEscaped" focusColor="#0f9d58"
+					layoutX="608.0" layoutY="28.0" prefHeight="25.0" prefWidth="50.0"
+					text="'" unFocusColor="#0f0f0f">
+					<font>
+						<Font name="Monospaced Bold" size="13.0" />
+					</font>
+					<tooltip>
+						<Tooltip
+							text="Caractere de escape que significa uma seqüência especial." />
+					</tooltip>
+				</JFXTextField>
+			</children>
+		</AnchorPane>
+		<AnchorPane fx:id="anchorPaneResumo" layoutX="3.0"
+			layoutY="145.0" prefHeight="38.0" prefWidth="786.0"
+			stylesheets="@../css/layout.css">
+			<children>
+				<Label fx:id="lblTotalSuccess" layoutX="9.0" layoutY="11.0"
+					styleClass="jfx-label-field" text="Linhas c/sucesso:">
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</Label>
+				<JFXTextField fx:id="txtTotalSuccess" editable="false"
+					layoutX="113.0" layoutY="2.0" prefHeight="25.0" prefWidth="120.0" />
+				<Label fx:id="lblTotalErrors" layoutX="243.0" layoutY="11.0"
+					styleClass="jfx-label-field" text="Linhas c/erros:">
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</Label>
+				<JFXTextField fx:id="txtTotalErrors" editable="false"
+					layoutX="336.0" layoutY="2.0" prefHeight="25.0" prefWidth="120.0" />
+				<Label fx:id="lblTempoProc" layoutX="466.0" layoutY="11.0"
+					styleClass="jfx-label-field" text="Tempo processamento:">
+					<font>
+						<Font name="System Bold" size="12.0" />
+					</font>
+				</Label>
+				<JFXTextField fx:id="txtTempoProc" editable="false"
+					layoutX="607.0" layoutY="2.0" prefHeight="25.0" prefWidth="120.0" />
+			</children>
+		</AnchorPane>
+		<TitledPane fx:id="titledPane" layoutX="8.0"
+			layoutY="185.0" styleClass="primary"
+			stylesheets="@../css/bootstrap3.css"
+			text="Lista de Arquivos Tratados">
+			<content>
+				<AnchorPane fx:id="anchorPaneListView" prefHeight="340.0"
+					prefWidth="784.0">
+					<children>
+						<JFXListView fx:id="listaViewFiles" layoutX="18.0"
+							layoutY="45.0" onMouseClicked="#handleClickFile"
+							prefHeight="340.0" prefWidth="784.0"
+							AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+							AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+					</children>
+				</AnchorPane>
+			</content>
+			<font>
+				<Font name="System Bold" size="12.0" />
+			</font>
+		</TitledPane>
+		<JFXButton fx:id="btnSelectPath" buttonType="RAISED"
+			layoutX="12.0" layoutY="8.0" onAction="#btnAbrirDiretorio"
+			prefHeight="32.0" prefWidth="171.0"
+			style="-fx-background-insets: 0,0,-1,0;" styleClass="warning"
+			stylesheets="@../css/layout.css" text="Selecionar Diretório">
+			<font>
+				<Font size="14.0" />
+			</font>
+			<graphic>
+				<FontAwesomeIconView glyphName="FOLDER_OPEN_ALT"
+					size="20.0" />
+			</graphic>
+		</JFXButton>
+		<JFXTextField fx:id="txtNamePath" disable="true"
+			editable="false" layoutX="191.0" layoutY="13.0" prefHeight="25.0"
+			prefWidth="595.0" />
+	</children>
+</AnchorPane>

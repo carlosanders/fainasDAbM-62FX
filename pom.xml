@@ -29,7 +29,7 @@
         <version>8.8.3</version>
         <configuration>
             <vendor>DAbM</vendor>
-            <mainClass>mb.dabm.application.Main</mainClass>
+            <mainClass>mb.dabm.application.App</mainClass>
             <jfxMainAppJarName>${project.build.finalName}.jar</jfxMainAppJarName>
             <nativeInstallers />              
             <vendor>EXE</vendor>
