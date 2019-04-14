@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
@@ -90,8 +88,8 @@ public class FXMLAnchorPaneTratamentoArquivoController implements Initializable
     private JFXTextField txtNamePath;
 
     private File dir;
-    private static final Logger LOGGER = LogManager
-	    .getLogger(FXMLAnchorPaneTratamentoArquivoController.class.getName());
+   // private static final Logger LOGGER = LogManager
+//	    .getLogger(FXMLAnchorPaneTratamentoArquivoController.class.getName());
     private ObservableList<File> observableListFile;
     private List<File> listaSplitFile;
 

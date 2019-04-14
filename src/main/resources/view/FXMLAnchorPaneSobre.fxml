@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="anchorPaneSobre" maxHeight="-Infinity"
+	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	prefHeight="185.0" prefWidth="389.0"
+	xmlns="http://javafx.com/javafx/8.0.171"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="mb.dabm.controller.FXMLAnchorPaneSobreController">
+	<children>
+		<ImageView fitHeight="120.0" fitWidth="68.0" layoutX="12.0"
+			layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+			<image>
+				<Image url="@../img/brasaoDAbM.png" />
+			</image>
+		</ImageView>
+		<Label fx:id="labelDepto" alignment="CENTER"
+			contentDisplay="CENTER" layoutX="89.0" layoutY="26.0"
+			text="Departamento de Informática">
+			<font>
+				<Font name="Arial Bold" size="18.0" />
+			</font>
+		</Label>
+		<Label fx:id="lblAutor" contentDisplay="CENTER" layoutX="91.0"
+			layoutY="88.0" styleClass="textoLabelSobre"
+			text="Autor: 1T (T) Anders" />
+		<Label fx:id="lblVer" contentDisplay="CENTER" layoutX="92.0"
+			layoutY="68.0" styleClass="textoLabelSobre"
+			text="Versão: 0.0.1 - 07/04/2019" textFill="#065fb8" />
+		<Label fx:id="labelSistema" alignment="CENTER"
+			contentDisplay="CENTER" layoutX="89.0" layoutY="49.0"
+			text="Sistema de Extração e Tratamento de Dados">
+			<font>
+				<Font name="Arial Bold" size="13.0" />
+			</font>
+		</Label>
+		<Label fx:id="lblRamal" contentDisplay="CENTER" layoutX="91.0"
+			layoutY="109.0" styleClass="textoLabelSobre" text="Ramal: 8110-2543" />
+		<Button fx:id="buttonOk" layoutX="178.0" layoutY="140.0"
+ 			mnemonicParsing="false" styleClass="success" text="Ok" />
+	</children>
+	<stylesheets>
+		<URL value="@../css/layout.css" />
+		<URL value="@../css/principal.css" />
+	</stylesheets>
+</AnchorPane>

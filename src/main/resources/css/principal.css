@@ -10,5 +10,11 @@
 .textoLabel{
     -fx-text-fill: #065fb8;
     -fx-text-alignment:center;
-    -fx-font-size: 15px;
+    -fx-font-size: 13px;
+}
+
+.textoLabelSobre{
+    -fx-text-fill: #065fb8;
+    -fx-text-alignment:center;
+    -fx-font-size: 14px;
 }

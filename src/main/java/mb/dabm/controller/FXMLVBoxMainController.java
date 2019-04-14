@@ -9,14 +9,18 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import mb.dabm.application.App;
 
 public class FXMLVBoxMainController implements Initializable
 {
@@ -25,7 +29,7 @@ public class FXMLVBoxMainController implements Initializable
     @FXML
     private MenuItem menuItemTratamentoArquivo;
     @FXML
-    private MenuItem menuItemGerarArquivo;
+    private MenuItem menuItemHome;
     @FXML
     private MenuItem menuItemAbout;
     @FXML
@@ -33,11 +37,12 @@ public class FXMLVBoxMainController implements Initializable
     @FXML
     private Label lblVer;
     @FXML
-    private Label lblAutor;    
-    @FXML
-    private Label lblTotal;
-    private static final Logger LOGGER = LogManager.getLogger(FXMLVBoxMainController.class.getName());
+    private Label lblAutor;
+    
+    //public static Stage stage = null;
 
+    // uteis
+    private static final Logger LOGGER = LogManager.getLogger(FXMLVBoxMainController.class.getName());
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -50,16 +55,14 @@ public class FXMLVBoxMainController implements Initializable
     public void handleMenuItemLeituraArquivo(ActionEvent event) throws IOException
     {
 
-	//forma para passar valores entre controllers
+	// forma para passar valores entre controllers
 	FXMLLoader loader = new FXMLLoader();
-	loader.setLocation(getClass()
-		.getResource("/view/FXMLAnchorPaneLeituraArquivo.fxml"));
+	loader.setLocation(getClass().getResource("/view/FXMLAnchorPaneLeituraArquivo.fxml"));
 	Parent aPane = loader.load();
-	
-	//exemplo
-	//FXMLAnchorPaneLeituraArquivoController c = loader.getController();
-	//c.setTotalLinhas("2500");
-	
+
+	// exemplo
+	// FXMLAnchorPaneLeituraArquivoController c = loader.getController();
+	// c.setTotalLinhas("2500");
 
 	anchorPane.getChildren().setAll(aPane);
     }
@@ -68,30 +71,49 @@ public class FXMLVBoxMainController implements Initializable
     @FXML
     public void handleMenuItemTratamentoArquivo(ActionEvent event) throws IOException
     {
-	AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/FXMLAnchorPaneTratamentoArquivo.fxml"));
+	AnchorPane a = (AnchorPane) FXMLLoader
+		.load(getClass().getResource("/view/FXMLAnchorPaneTratamentoArquivo.fxml"));
 	anchorPane.getChildren().setAll(a);
     }
 
     // Event Listener on MenuItem[#menuItemGerarArquivo].onAction
     @FXML
-    public void handleMenuItemGerarArquivo(ActionEvent event) throws IOException
+    public void handleMenuItemHome(ActionEvent event) throws IOException
     {
-	AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/FXMLAnchorPaneLeituraArquivo.fxml"));
-	anchorPane.getChildren().setAll(a);
+	App.stage.close();
+	Platform.runLater(() -> new App().start(new Stage()));
     }
 
     // Event Listener on MenuItem[#menuItemAbout].onAction
     @FXML
-    public void handleMenuItemAbout(ActionEvent event)
+    public void handleMenuItemAbout(ActionEvent event) throws IOException
     {
-	// TODO Anders - Implementar acao About
+	FXMLLoader loader = new FXMLLoader();
+	loader.setLocation(FXMLAnchorPaneSobreController.class.getResource("/view/FXMLAnchorPaneSobre.fxml"));
+	AnchorPane page = (AnchorPane) loader.load();
+
+	// criando um estagio de dialog (Stage Dialog)
+	Stage dialogStage = new Stage();
+	dialogStage.setTitle("Sobre");
+	Scene scene = new Scene(page);
+	dialogStage.setScene(scene);
+	dialogStage.setResizable(false);
+	// dialogStage.initStyle(StageStyle.UNDECORATED);
+	
+	// setando o cliente no controller da tela FXMLAnchorPaneCadastrosClientesDialog.fxml
+	//FXMLAnchorPaneSobreController controller = loader.getController();
+        //controller.setDialogStage(dialogStage);
+	//FXMLVBoxMainController.stage = dialogStage;
+
+	// Mostra o dialog e espera ate que o usu o feche
+	dialogStage.showAndWait();
     }
 
     /**
      * Metodo para ler arquivo properties
      */
     private void lerAppProperties()
-    {
+    {        
 	Properties props = new Properties();
 	InputStream is = getClass().getResourceAsStream("/application.properties");
 	try {
@@ -114,5 +136,7 @@ public class FXMLVBoxMainController implements Initializable
     {
 	lblVer.setText(ver);
     }
+
+    
 
 }
